@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const chefsSchema = new mongoose.Schema(
   {
+    id: {
+      type:Number,
+      require: true,
+    },
     name: {
       type: String,
       required: true,
@@ -10,9 +14,9 @@ const chefsSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    chefsRestaurants: {
-      type: Array,
-      required: false,
+    about: {
+      type: String,
+      require: true,
     },
   },
   { timestamps: true }
