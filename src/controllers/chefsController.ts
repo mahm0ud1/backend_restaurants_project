@@ -15,8 +15,8 @@ export class ChefsController {
   public static async getChef(req: Request, res: Response) {
     try {
       const service = new ChefsService();
-      const param = req.body;
-      const chef = await service.getChef(param);
+      const params = new Map(Object.entries(req.query)) as Map<any,any>;
+      const chef = await service.getChef(params);
       return res.send(chef);
     } catch (error) {
       return res.send(error);
@@ -28,7 +28,7 @@ export class ChefsController {
       const params = req.body;
       const service = new ChefsService();
       const chef = await service.createChef(params);
-      return res.status(200).send("Chef successfully created");
+      return res.status(200).send(chef);
     } catch (error) {
       return res.send(error);
     }

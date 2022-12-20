@@ -1,21 +1,45 @@
+import { Increment } from "mongoose-auto-increment-ts";
 import Chefs from "../db/models/chefs";
 import Restaurants from "../db/models/restaurants";
 
 export class RestaurantsDal {
-  public async createRestaurant(restaurant: any) {
-    restaurant = new Restaurants({
-      name: restaurant.restaurantName,
-      chef: restaurant.chefName,
-    });
-
-    const response = await Restaurants.create(restaurant);
-    const result = await Chefs.findOne({ name: response.chef }).updateOne({
-      $push: { restaurants: response._id },
-    });
-    return response;
+  private static async getIncrementRestaurantID() {
+    let chefID = null;
+    await Increment('restaurants').then(
+      id => chefID = id
+    );
+    return chefID;
   }
 
-  public findAll() {
-    return Restaurants.find();
+  public async createRestaurant(restaurant: any) {
+    try {
+      if (restaurant.chef_id !== undefined) {
+        const data = await Chefs.findOne({ id: restaurant.chef_id });
+        if (data) {
+          const id = await RestaurantsDal.getIncrementRestaurantID();
+          restaurant = new Restaurants({
+            id: id,
+            name: restaurant.restaurantName,
+            chefID: restaurant.chef_id,
+          });
+
+          const response = await Restaurants.create(restaurant);
+          if (response)
+            return "Created";
+        }
+      }
+    }
+    catch (err) { }
+    return "ERROR";
+  }
+
+  public getRestaurants() {
+    return Restaurants.find()
+      .select({
+        "_id": 0,
+        "id": 1,
+        "name": 1,
+        "chefID": 1
+      });
   }
 }

@@ -3,13 +3,13 @@ import { ChefsDal } from "../dal/chefs.dal";
 export class ChefsService {
   public async getChefs() {
     const dal = new ChefsDal();
-    const res = await dal.findAll();
+    const res = await dal.getChefs();
     return res;
   }
 
-  public async getChef(param: { [key: string]: string }) {
+  public async getChef(params:Map<any,any>) {
     const dal = new ChefsDal();
-    const res = await dal.getChef(param);
+    const res = await dal.getChefByID(params);
     return res;
   }
 

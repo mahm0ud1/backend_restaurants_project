@@ -13,12 +13,13 @@ export class ChefsDal {
   public async createChef(chef: any) {
     const id = await this.getIncrementChefID();
     if (id !== null) {
-      chef = new Chefs({
+      const chefInfo = {
         id: id,
         name: chef.name,
         age: chef.age,
         about: chef.about
-      });
+      }
+      chef = new Chefs(chefInfo);
 
       chef.save(function (err: any, results: any) {
         if (err) {
@@ -26,8 +27,14 @@ export class ChefsDal {
         }
         return results;
       });
+      return {
+        status: "Created",
+        data: chefInfo
+      };
     }
-    return "ERROR";
+    return {
+      status: "ERROR"
+    };
   }
 
   public async updateChef(chef: any) {
@@ -43,22 +50,33 @@ export class ChefsDal {
     return data;
   }
 
-  public findAll(query: any = null) {
-    return Chefs.find(query);
+  public getChefs(query: any = null) {
+    return Chefs.find(query)
+      .select({
+        "_id": 0,
+        "id": 1,
+        "name": 1,
+        "age": 1,
+        "about": 1
+      });
   }
 
-  public async getChef(param: { [key: string]: string }) {
-    const data = await Chefs.aggregate([
-      { $match: { name: `${param.name}` } },
-      {
-        $lookup: {
-          localField: "restaurants",
-          foreignField: "_id",
-          from: "restaurants",
-          as: "restaurants",
-        },
-      },
-    ]);
-    return data;
+  public async getChefByID(params: Map<any, any>) {
+    const id = params.get("id");
+    if (id !== undefined) {
+      const data = await Chefs.aggregate([
+        { $match: { id: `${id}` } },
+        // {
+        //   $lookup: {
+        //     localField: "restaurants",
+        //     foreignField: "_id",
+        //     from: "restaurants",
+        //     as: "restaurants",
+        //   },
+        // },
+      ]);
+      return data;
+    }
+    return "ERROR";
   }
 }

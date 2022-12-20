@@ -2,12 +2,16 @@ import mongoose from "mongoose";
 
 const restaurantsSchema = new mongoose.Schema(
   {
+    id : {
+      type: Number,
+      require: true,
+    },
     name: {
       type: String,
       required: true,
     },
-    chef: {
-      type: String,
+    chefID: {
+      type: Number,
       required: true,
     },
   },
