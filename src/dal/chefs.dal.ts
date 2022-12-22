@@ -64,18 +64,36 @@ export class ChefsDal {
   public async getChefByID(params: Map<any, any>) {
     const id = params.get("id");
     if (id !== undefined) {
+      const options = (params.get("restaurantsIncluded") === "true") ?
+        [{
+          $lookup: {
+            localField: "id",
+            foreignField: "chefID",
+            from: "restaurants",
+            as: "chef_restaurants",
+          }
+        }] : [];
       const data = await Chefs.aggregate([
-        { $match: { id: `${id}` } },
-        // {
-        //   $lookup: {
-        //     localField: "restaurants",
-        //     foreignField: "_id",
-        //     from: "restaurants",
-        //     as: "restaurants",
-        //   },
-        // },
+        {
+          $match: { id: parseInt(id) }
+        },
+        ...options
+        ,
+        {
+          $project: {
+            "_id": 0,
+            "id": 1,
+            "name": 1,
+            "age": 1,
+            "about": 1,
+            "chef_restaurants.id": 1,
+            "chef_restaurants.name": 1,
+          }
+        },
+        { $limit: 1 },
       ]);
-      return data;
+      if (data && data.length !== 0)
+        return data;
     }
     return "ERROR";
   }

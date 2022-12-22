@@ -33,13 +33,58 @@ export class RestaurantsDal {
     return "ERROR";
   }
 
-  public getRestaurants() {
-    return Restaurants.find()
-      .select({
-        "_id": 0,
-        "id": 1,
-        "name": 1,
-        "chefID": 1
-      });
+  public async getRestaurants() {
+    const data = await Restaurants.aggregate([
+      {
+        $lookup: {
+          localField: "chefID",
+          foreignField: "id",
+          from: "chefs",
+          as: "chef",
+        }
+      },
+      {
+        $project: {
+          "_id": 0,
+          "name": 1,
+          "chef.name":1
+        }
+      },
+    ]);
+    if (data && data.length !== 0)
+      return data;
+  }
+
+  public async getChefByID(params: Map<any, any>) {
+    const id = params.get("id");
+    if (id !== undefined) {
+      const data = await Restaurants.aggregate([
+        {
+          $match: { id: parseInt(id) }
+        },
+        {
+          $lookup: {
+            localField: "chefID",
+            foreignField: "id",
+            from: "chefs",
+            as: "chef",
+          }
+        },
+        {
+          $project: {
+            "_id": 0,
+            "id": 1,
+            "name": 1,
+            "age": 1,
+            "about": 1,
+            "chef_restaurants.name": 1,
+          }
+        },
+        { $limit: 1 },
+      ]);
+      if (data && data.length !== 0)
+        return data;
+    }
+    return "ERROR";
   }
 }
