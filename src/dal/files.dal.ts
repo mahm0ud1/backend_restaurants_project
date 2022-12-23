@@ -1,19 +1,4 @@
-import { Upload } from "../middleware/files"
-
-import mongoose from "mongoose";
-const Grid = require("gridfs-stream");
-
-let gfs:any, gridfsBucket:any;
-
-const conn = mongoose.connection;
-conn.once('open', () => {
- gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
- bucketName: 'photos'
-});
-
- gfs = Grid(conn.db, mongoose.mongo);
- gfs.collection('photos');
-})
+import { Upload, GFS, GridFSBucker } from "../middleware/files"
 
 export class FilesDal {
 
@@ -34,27 +19,25 @@ export class FilesDal {
             };
         } catch (error: any) {
             console.log(error);
-
-            if (error.code === "LIMIT_UNEXPECTED_FILE") {
-                return {
-                    code: 400,
-                    message: "Too many files to upload."
-                };
-            }
-            return {
-                code: 500,
-                message: `Error when trying upload many files: ${error}`
-            };
         }
     }
 
     public async downloadImage(photo_name: string) {
         try {
-            const file = await gfs.files.findOne({ filename: photo_name });
-            const readStream = gridfsBucket.openDownloadStream(file._id);
+            const file = await GFS.files.findOne({ filename: photo_name });
+            const readStream = GridFSBucker.openDownloadStream(file._id);
             return readStream;
         } catch (error) {
-            
+
+        }
+    }
+
+    public async deleteImage(photo_name: string) {
+        try {
+            await GFS.files.deleteOne({ filename: photo_name });
+            return "success";
+        } catch (error) {
+            return "An error occured.";
         }
     }
 }

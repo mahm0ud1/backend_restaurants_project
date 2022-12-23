@@ -12,4 +12,10 @@ export class FilesService {
         const res = await dal.downloadImage(imageName);
         return res;
     }
+    
+    public async deleteImage(imageName:string) {
+        const dal = new FilesDal();
+        const res = await dal.deleteImage(imageName);
+        return res;
+    }
 }
