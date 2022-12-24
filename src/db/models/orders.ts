@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const chefsSchema = new mongoose.Schema(
+const ordersSchema = new mongoose.Schema(
   {
     id: {
       type:Number,
@@ -10,7 +10,7 @@ const chefsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    age: {
+    price: {
       type: Number,
       required: true,
     },
@@ -22,10 +22,14 @@ const chefsSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    count: {
+        type: Number,
+        require: true
+    }
   },
   { timestamps: true }
 );
 
-const Chefs = mongoose.model("Chefs", chefsSchema);
+const Orders = mongoose.model("Orders", ordersSchema);
 
-export default Chefs;
+export default Orders;

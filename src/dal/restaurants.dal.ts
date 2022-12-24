@@ -13,14 +13,17 @@ export class RestaurantsDal {
 
   public async createRestaurant(restaurant: any) {
     try {
-      if (restaurant.chef_id !== undefined) {
-        const data = await Chefs.findOne({ id: restaurant.chef_id });
+      if (restaurant.chefID !== undefined) {
+        const data = await Chefs.findOne({ id: restaurant.chefID });
         if (data) {
           const id = await RestaurantsDal.getIncrementRestaurantID();
           restaurant = new Restaurants({
             id: id,
-            name: restaurant.restaurantName,
-            chefID: restaurant.chef_id,
+            name: restaurant.name,
+            chefID: restaurant.chefID,
+            imageURL: restaurant.imageURL,
+            rate: restaurant.rate,
+            timeOpen: restaurant.timeOpen,
           });
 
           const response = await Restaurants.create(restaurant);
@@ -29,7 +32,9 @@ export class RestaurantsDal {
         }
       }
     }
-    catch (err) { }
+    catch (err) {
+      console.log(err);
+     }
     return "ERROR";
   }
 
@@ -47,6 +52,9 @@ export class RestaurantsDal {
         $project: {
           "_id": 0,
           "name": 1,
+          "imageURL": 1,
+          "rate": 1,
+          "timeOpen":1,
           "chef.name":1
         }
       },
@@ -77,7 +85,9 @@ export class RestaurantsDal {
             "name": 1,
             "age": 1,
             "about": 1,
+            "imageURL": 1,
             "chef_restaurants.name": 1,
+            "chef_restaurants.imageURL": 1,
           }
         },
         { $limit: 1 },

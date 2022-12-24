@@ -17,7 +17,8 @@ export class ChefsDal {
         id: id,
         name: chef.name,
         age: chef.age,
-        about: chef.about
+        about: chef.about,
+        imageURL: chef.imageURL,
       }
       chef = new Chefs(chefInfo);
 
@@ -45,6 +46,7 @@ export class ChefsDal {
         name: chef.name,
         age: chef.age,
         about: chef.about,
+        imageURL: chef.imageURL,
       }
     });
     return data;
@@ -57,6 +59,7 @@ export class ChefsDal {
         "id": 1,
         "name": 1,
         "age": 1,
+        "imageURL": 1,
         "about": 1
       });
   }
@@ -85,9 +88,11 @@ export class ChefsDal {
             "id": 1,
             "name": 1,
             "age": 1,
+            "imageURL": 1,
             "about": 1,
             "chef_restaurants.id": 1,
             "chef_restaurants.name": 1,
+            "chef_restaurants.imageURL": 1,
           }
         },
         { $limit: 1 },
