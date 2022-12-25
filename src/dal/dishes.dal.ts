@@ -14,7 +14,8 @@ export class DishesDal {
   public async createDish(dish: any) {
     try {
       if (dish.restaurantID !== undefined) {
-        const data = await Restaurants.findOne({ id: dish.restaurantID });
+        const resturantID = dish.restaurantID;
+        const data = await Restaurants.findOne({ id: resturantID});
         if (data) {
           const id = await DishesDal.getIncrementDishID();
           dish = new Dishes({
@@ -31,6 +32,10 @@ export class DishesDal {
           const response = await Dishes.create(dish);
           if (response)
             return "Created";
+        }
+        else
+        {
+          return `Restaurant ID ${resturantID} not Found`;
         }
       }
     }
@@ -56,8 +61,10 @@ export class DishesDal {
           "id":1,
           "name": 1,
           "imageURL": 1,
-          "rate": 1,
-          "timeOpen":1,
+          "price": 1,
+          "about":1,
+          "dishType": 1,
+          "signature":1,
           "restaurant.id":1,
           "restaurant.name":1,
           "restaurant.about":1,
