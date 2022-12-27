@@ -6,21 +6,13 @@ const ordersSchema = new mongoose.Schema(
       type:Number,
       require: true,
     },
-    name: {
-      type: String,
-      required: true,
-    },
-    price: {
+    userID: {
       type: Number,
-      required: true,
-    },
-    imageURL: {
-      type: String,
       require: true
     },
-    about: {
-      type: String,
-      require: true,
+    dishID: {
+      type: Number,
+      require: true
     },
     count: {
         type: Number,
