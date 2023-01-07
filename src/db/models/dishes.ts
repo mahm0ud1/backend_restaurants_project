@@ -18,7 +18,7 @@ const dishesSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    imageURL: {
+    imageUrl: {
       type: String,
       require: true
     },

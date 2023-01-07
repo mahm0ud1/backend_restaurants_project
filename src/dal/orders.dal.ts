@@ -45,7 +45,7 @@ export class OrdersDal {
         ]);
         if (data) {
           const orders: any[] = []
-          data.forEach((order,i)=> orders[i] = {
+          data.forEach((order, i) => orders[i] = {
             orderID: order.id,
             count: order.count,
             ...order.dish[0]
@@ -66,21 +66,20 @@ export class OrdersDal {
   public async createOrder(order: any) {
     const data = await Orders.findOne({ dishID: order.dishID, userID: order.userID });
     if (data) {
-      const orderCount = order.count;
+      const orderCount = Number(order.count);
       if (orderCount > 0) {
-        const count = Number(data.count) + Number(orderCount)
-        const updatedData = await data
+        const count = Number(data.count) + orderCount
+        await data
           .updateOne({
             $set: {
               count: count,
             }
           });
 
-          return {
-            status: "Updated"
-          };
+        return {
+          status: "Updated"
+        };
       }
-
     }
     else {
       const id = await this.getIncrementOrderID();

@@ -27,7 +27,7 @@ const restaurantsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    imageURL: {
+    imageUrl: {
       type: String,
       require: true
     },
@@ -47,6 +47,6 @@ const restaurantsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Restaurants = mongoose.model("Restaurants", restaurantsSchema);
+const Restaurants = mongoose.model("restaurants", restaurantsSchema);
 
 export default Restaurants;
