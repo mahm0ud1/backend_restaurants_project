@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import Token from "../interface/tokenInterface";
+import { CustomRequest, getUserID } from "../middleware/jwtAuth";
 import { OrdersService } from "../services/orders.service";
 
 export class OrdersController {
@@ -13,11 +15,12 @@ export class OrdersController {
     }
   }
   
-  public static async createOrder(req: Request, res: Response) {
+  public static async createOrder(req: Request, res: Response, userID: any) {
     try {
       const order = req.body;
+      const userID = getUserID(req);
       const service = new OrdersService();
-      const orderRes = await service.createOrder(order);
+      const orderRes = await service.createOrder(userID, order);
       return res.send(orderRes);
     } catch (error) {
       return res.send(error);

@@ -4,7 +4,8 @@ import restaurantsRoutes from "./restaurants.routes";
 import dishesRoutes from "./dishes.routes";
 import ordersRoutes from './orders.routes';
 import filesRoute from './files.routes';
-import authRoutes from './auth.routes'
+import authRoutes from './auth.routes';
+import searchRoutes from './search.routes';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.use("/api/auth/", authRoutes);
 router.use("/api/restaurants/", restaurantsRoutes);
 router.use("/api/dishes/", dishesRoutes);
 router.use("/api/orders/", ordersRoutes);
+router.use("/api/search/", searchRoutes);
 router.use("/api/files/", filesRoute);
 
 export default router;

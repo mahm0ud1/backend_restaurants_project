@@ -63,49 +63,46 @@ export class OrdersDal {
     };
   }
 
-  public async createOrder(order: any) {
-    const data = await Orders.findOne({ dishID: order.dishID, userID: order.userID });
-    if (data) {
-      const orderCount = Number(order.count);
-      if (orderCount > 0) {
-        const count = Number(data.count) + orderCount
-        await data
-          .updateOne({
-            $set: {
-              count: count,
-            }
-          });
-
-        return {
-          status: "Updated"
-        };
-      }
-    }
-    else {
-      const id = await this.getIncrementOrderID();
-      if (id !== null) {
-        const chefInfo = {
-          id: id,
-          userID: order.userID,
-          dishID: order.dishID,
-          count: order.count,
+  public async createOrder(userID: number, order: any) {
+    var query = { userID: userID, dishID: order.dishID },
+      update = {
+        $inc: {
+          count: order.count
         }
-        order = new Orders(chefInfo);
+      },
+      options = {};
 
-        order.save(function (err: any, results: any) {
-          if (err) {
-            throw err;
+    const resData = await new Promise<String>((resolve, reject) => {
+      Orders.findOneAndUpdate(query, update, options, async (error, result) => {
+        if (error) return;
+        if (!result) {
+          const id = await this.getIncrementOrderID();
+          if (id !== null) {
+            const chefInfo = {
+              id: id,
+              userID: userID,
+              dishID: order.dishID,
+              count: order.count,
+            }
+            order = new Orders(chefInfo);
+
+            order.save(function (err: any, results: any) {
+              if (err) {
+                resolve("ERROR");
+              }
+              else {
+                resolve("added");
+              }
+            });
           }
-          return results;
-        });
-        return {
-          status: "Created",
-          data: chefInfo
-        };
-      }
-    }
+        }
+        else {
+          resolve("updated");
+        }
+      })
+    });
     return {
-      status: "ERROR"
+      status: resData
     };
   };
 }

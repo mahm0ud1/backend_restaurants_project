@@ -43,8 +43,8 @@ export class RestaurantsDal {
         const chefName = (d.chef.length == 1)?d.chef[0].name:"";
         return {
           id: d.id,
-          title: d.name,
-          details: chefName,
+          name: d.name,
+          about: chefName,
           created_date: d.createdAt,
           imageUrl: d.imageUrl,
           rate: d.rate,
@@ -100,14 +100,17 @@ export class RestaurantsDal {
     ]);
     if(data && data.length == 1)
     {
+      const chefName = (data[0].chef.length == 1)?data[0].chef[0].name:null;
       const redesignedData = {
-        id: data[0].id,
-        title: data[0].name,
-        details: data[0].chef[0].name,
-        created_date: data[0].createdAt,
-        imageUrl: data[0].imageUrl,
-        rate: data[0].rate,
-        timeOpen: data[0].timeOpen,
+        restaurant: {
+          id: data[0].id,
+          name: data[0].name,
+          about: chefName,
+          created_date: data[0].createdAt,
+          imageUrl: data[0].imageUrl,
+          rate: data[0].rate,
+          timeOpen: data[0].timeOpen
+        },
         dishes: data[0].dishes
       }
 

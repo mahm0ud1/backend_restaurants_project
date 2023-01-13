@@ -2,7 +2,7 @@ import { Increment } from "mongoose-auto-increment-ts";
 import Users from "../db/models/users";
 import bcrypt from 'bcrypt'
 import { EMAIL_EXIST, RESTPONSE_IMPL, USERNAME_EXIST, USER_CREATED, USER_NOT_CREATED, USER_NOT_FOUND, USER_PASSWORD_INCORRECT, USER_TOKEN } from "../types/responds";
-import { getToken } from "../middleware/jwtAuth";
+import { createToken } from "../middleware/jwtAuth";
 
 export class AuthDal {
   private static async getIncrementUserID() {
@@ -78,7 +78,7 @@ export class AuthDal {
         });
 
         if (userRes) {
-          const token = getToken(id);
+          const token = createToken(id);
           return new USER_TOKEN(token);
         }
         else {

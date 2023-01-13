@@ -16,10 +16,11 @@ export class DishesDal {
       {
         $group: {
           _id: "$signature",
-          title: { $first: "$name" },
+          id: {$first: "$id"},
+          name: { $first: "$name" },
           imageUrl: { $first: "$imageUrl" },
           price: { $first: "$price" },
-          details: { $first: "$about" },
+          about: { $first: "$about" },
           dishType: { $first: "$dishType" },
           signature: { $first: "$signature" },
           restaurantID: { $first: "$restaurantID" },
@@ -37,10 +38,10 @@ export class DishesDal {
         $project: {
           "_id": 0,
           "id": 1,
-          "title": 1,
+          "name": 1,
           "imageUrl": 1,
           "price": 1,
-          "details": 1,
+          "about": 1,
           "dishType": 1,
           "signature": 1,
           "restaurant.id": 1,
@@ -50,10 +51,11 @@ export class DishesDal {
     if (data && data.length !== 0)
       return data.map(d => {
         return {
-          title: d.title,
+          id: d.id,
+          name: d.name,
           imageUrl: d.imageUrl,
           price: d.price,
-          details: d.details,
+          about: d.about,
           dishType: d.dishType,
           signature: d.signature,
           restaurantID: d.restaurant[0].id

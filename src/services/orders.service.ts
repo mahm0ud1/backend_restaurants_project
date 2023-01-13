@@ -7,9 +7,9 @@ export class OrdersService {
         return res;
     }
 
-    public async createOrder(order:any) {
+    public async createOrder(userID:number, order:any) {
         const dal = new OrdersDal();
-        const res = await dal.createOrder(order);
+        const res = await dal.createOrder(userID, order);
         return res;
     }
 }
