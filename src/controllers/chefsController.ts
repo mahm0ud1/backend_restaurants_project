@@ -2,6 +2,16 @@ import { Request, Response } from "express";
 import { ChefsService } from "../services/chefs.service";
 
 export class ChefsController {
+  public static async getChefOfTheWeek(req: Request, res: Response) {
+    try {
+      const service = new ChefsService();
+      const chef = await service.getChefOfTheWeek();
+      return res.send(chef);
+    } catch (error) {
+      return res.send(error);
+    }
+  }
+
   public static async getChefs(req: Request, res: Response) {
     try {
       const service = new ChefsService();
@@ -15,7 +25,7 @@ export class ChefsController {
   public static async getChef(req: Request, res: Response) {
     try {
       const service = new ChefsService();
-      const params = new Map(Object.entries(req.query)) as Map<any,any>;
+      const params = req.query;
       const chef = await service.getChef(params);
       return res.send(chef);
     } catch (error) {

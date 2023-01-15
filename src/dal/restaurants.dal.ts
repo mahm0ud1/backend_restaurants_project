@@ -176,8 +176,8 @@ export class RestaurantsDal {
         restaurants[i] = {
           id: d.id,
           imageUrl: d.imageUrl,
-          title: d.name,
-          details: chefName,
+          name: d.name,
+          about: chefName,
           created_date: d.createdAt,
           rate: d.rate,
           timeOpen: d.timeOpen

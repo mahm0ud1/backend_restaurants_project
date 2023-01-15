@@ -37,7 +37,7 @@ export class USER_NOT_CREATED extends RESTPONSE_IMPL {
 }
 
 export class USER_NOT_FOUND extends RESTPONSE_IMPL {
-    status_code = 400;
+    status_code = 401;
     message: String = "USER not found";
 }
 

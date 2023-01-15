@@ -1,6 +1,8 @@
 import Chefs from "../db/models/chefs";
 import { Increment } from 'mongoose-auto-increment-ts'
+import epicureData from "../db/models/epicureData";
 
+const chefOfTheWeek:String = "chefOfTheWeek";
 export class ChefsDal {
   private async getIncrementChefID() {
     let chefID = null;
@@ -64,10 +66,10 @@ export class ChefsDal {
       });
   }
 
-  public async getChefByID(params: Map<any, any>) {
-    const id = params.get("id");
+  public async getChefByID(params: any) {
+    const {id, restaurantsIncluded} = params;
     if (id !== undefined) {
-      const options = (params.get("restaurantsIncluded") === "true") ?
+      const options = (restaurantsIncluded === "true") ?
         [{
           $lookup: {
             localField: "id",
@@ -88,18 +90,27 @@ export class ChefsDal {
             "id": 1,
             "name": 1,
             "age": 1,
-            "imageURL": 1,
+            "imageUrl": 1,
             "about": 1,
             "chef_restaurants.id": 1,
             "chef_restaurants.name": 1,
-            "chef_restaurants.imageURL": 1,
+            "chef_restaurants.imageUrl": 1,
           }
         },
         { $limit: 1 },
       ]);
       if (data && data.length !== 0)
-        return data;
+        return data[0];
     }
     return "ERROR";
+  }
+
+  public async getChefOfTheWeek() {
+    const data = await epicureData.findOne({ key: chefOfTheWeek });
+    if (data) {
+      const params = {id: data.value, restaurantsIncluded: "true"};
+      return this.getChefByID(params);
+    }
+    return "Not Found"
   }
 }
