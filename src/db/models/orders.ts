@@ -17,6 +17,10 @@ const ordersSchema = new mongoose.Schema(
     count: {
         type: Number,
         require: true
+    },
+    dishOptions: {
+      type: Object,
+      required: true
     }
   },
   { timestamps: true }

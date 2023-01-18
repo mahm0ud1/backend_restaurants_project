@@ -4,9 +4,9 @@ import { CustomRequest, getUserID } from "../middleware/jwtAuth";
 import { OrdersService } from "../services/orders.service";
 
 export class OrdersController {
-  public static async getChefs(req: Request, res: Response) {
+  public static async getOrders(req: Request, res: Response) {
     try {
-      const userID = req.params.userID;
+      const userID = getUserID(req);
       const service = new OrdersService();
       const orderRes = await service.getOrders(userID);
       return res.send(orderRes);

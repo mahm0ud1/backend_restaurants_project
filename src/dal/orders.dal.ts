@@ -35,7 +35,7 @@ export class OrdersDal {
               "count": 1,
               "dish.id": 1,
               "dish.name": 1,
-              "dish.imageURL": 1,
+              "dish.imageUrl": 1,
               "dish.price": 1,
               "dish.about": 1,
               "dish.dishType": 1,
@@ -64,7 +64,8 @@ export class OrdersDal {
   }
 
   public async createOrder(userID: number, order: any) {
-    var query = { userID: userID, dishID: order.dishID },
+    const {dishID, count, dishOptions} = order;
+    var query = { userID: userID, dishID: order.dishID, dishOptions: dishOptions },
       update = {
         $inc: {
           count: order.count
@@ -81,8 +82,9 @@ export class OrdersDal {
             const chefInfo = {
               id: id,
               userID: userID,
-              dishID: order.dishID,
-              count: order.count,
+              dishID: dishID,
+              count: count,
+              dishOptions: dishOptions
             }
             order = new Orders(chefInfo);
 
@@ -97,12 +99,10 @@ export class OrdersDal {
           }
         }
         else {
-          resolve("updated");
+          resolve("added");
         }
       })
     });
-    return {
-      status: resData
-    };
+    return resData;
   };
 }

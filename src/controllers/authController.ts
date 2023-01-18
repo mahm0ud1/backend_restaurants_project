@@ -24,8 +24,8 @@ export class AuthController {
             const service = new AuthService();
             const userRes: RESTPONSE_IMPL = await service.login(user);
             if (userRes instanceof USER_TOKEN) {
-                res.cookie("token", userRes.getMessage(), { maxAge: JWT_EXPIRY_HOURS * 1000 });
                 return res.status(userRes.getStatusCode()).send({
+                    jsessionid: userRes.getMessage(),
                     Message: "Success"
                 });
             }

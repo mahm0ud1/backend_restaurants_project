@@ -11,7 +11,7 @@ export interface CustomRequest extends Request {
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.cookies.token;
+        const token = req.headers.jsessionid as string;
 
         if (!token) {
             throw new Error();
