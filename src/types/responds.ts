@@ -55,6 +55,21 @@ export class USER_TOKEN extends RESTPONSE_IMPL {
     }
 }
 
+export class USER_ROLE_TOKEN extends RESTPONSE_IMPL {
+    message: String;
+    role: String;
+    status_code = 200;
+    constructor(message: String, role:String) {
+        super();
+        this.message = message;
+        this.role = role;
+    }
+
+    public getRole() {
+        return this.role;
+    }
+}
+
 export class OK_RESPONSE extends RESTPONSE_IMPL {
     status_code = 200;
     message: String = "OK";

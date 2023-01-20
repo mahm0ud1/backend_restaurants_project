@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { JWT_EXPIRY_HOURS } from "../middleware/jwtAuth";
 import { AuthService } from "../services/auth.service";
-import { RESTPONSE_IMPL, USER_TOKEN } from "../types/responds";
+import { RESTPONSE_IMPL, USER_ROLE_TOKEN, USER_TOKEN } from "../types/responds";
 
 export class AuthController {
     public static async register(req: Request, res: Response) {
@@ -26,6 +26,13 @@ export class AuthController {
             if (userRes instanceof USER_TOKEN) {
                 return res.status(userRes.getStatusCode()).send({
                     jsessionid: userRes.getMessage(),
+                    Message: "Success"
+                });
+            }
+            else if(userRes instanceof USER_ROLE_TOKEN) {
+                return res.status(userRes.getStatusCode()).send({
+                    jsessionid: userRes.getMessage(),
+                    role: userRes.getRole(),
                     Message: "Success"
                 });
             }

@@ -1,7 +1,7 @@
 import { Increment } from "mongoose-auto-increment-ts";
 import Users from "../db/models/users";
 import bcrypt from 'bcrypt'
-import { EMAIL_EXIST, RESTPONSE_IMPL, USERNAME_EXIST, USER_CREATED, USER_NOT_CREATED, USER_NOT_FOUND, USER_PASSWORD_INCORRECT, USER_TOKEN } from "../types/responds";
+import { EMAIL_EXIST, RESTPONSE_IMPL, USERNAME_EXIST, USER_CREATED, USER_NOT_CREATED, USER_NOT_FOUND, USER_PASSWORD_INCORRECT, USER_ROLE_TOKEN, USER_TOKEN } from "../types/responds";
 import { createToken } from "../middleware/jwtAuth";
 
 export class AuthDal {
@@ -64,7 +64,7 @@ export class AuthDal {
       const data = await Users.findOne({ $or: [{ username: username }, { email: email }] });
 
       if (data) {
-        const { id, firstName, lastName, username, email, hashedPassword } = data;
+        const { id, firstName, lastName, username, email, hashedPassword, role } = data;
 
         const userRes = await new Promise<boolean>((resolve, reject) => {
           bcrypt.compare(password, hashedPassword, function (err, result) {
@@ -79,6 +79,8 @@ export class AuthDal {
 
         if (userRes) {
           const token = createToken(id);
+          if(role)
+            return new USER_ROLE_TOKEN(token, role);
           return new USER_TOKEN(token);
         }
         else {
